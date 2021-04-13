@@ -1,0 +1,72 @@
+function [ RUamp RLamp LUamp LLamp ] = ampFind( im, calibrate, units )
+%AMPFIND Finds the vertices of one period of the mucosal wave and takes the
+%difference to calculate the amplitude of each of the folds in one period.
+%   Author: Andrew Kochie Feb. 2010
+%   
+%   Input Arguements:
+%       im = binary image of kymographic wave
+%       calibrate = calibration coefficient to modify amplitude
+%       units = units of the calibration coefficient
+%
+%   Output:
+%       RUamp = amplitude of right upper vocal fold
+%       RLamp = amplitude of right lower vocal fold
+%       LUamp = amplitude of left upper vocal fold
+%       LLamp = amplitude of left lower vocal fold
+
+
+try
+    % Opens a window where the user draws a polygon around one period of the
+    % wave.
+    if im == 0
+        warndlg('Please create a black and white image by setting an appropriate threshold', 'Warning')
+        RUamp = 0; LUamp = 0; RLamp = 0; LLamp = 0;
+        return
+    end
+    figure('Name', 'Please enclose one period of the wave with lines')
+    imagesc(im)
+    mask = roipoly(im); 
+    fold = mask.*im;
+
+    [r c] = find(fold, 1); %The coordinate to start tracing
+
+
+    bnd = bwtraceboundary(fold, [r c], 'N');
+
+    %Find the peak coordinates
+    Dy = max(bnd(:,1));
+    Uy = min(bnd(:,1));
+    c1 = find(bnd(:,1) == Dy); c1 = bnd(c1,2); %Finds all the columns associated with up/down edge
+    c2 = find(bnd(:,1) == Uy); c2 = bnd(c2,2);
+    Dx = round(mean(c1)); %Down edge
+    Ux = round(mean(c2)); %Up edge
+
+    %Find the midpoint of the left/right edges
+
+    Lx = min(bnd(:,2)); %Column of left edge
+    Rx = max(bnd(:,2)); %Column of right edge
+    r1 = find(bnd(:,2) == Lx); r1 = bnd(r1,1); %Finds all the rows associated with left/right edge
+    r2 = find(bnd(:,2) == Rx); r2 = bnd(r2,1);
+    Ly = round(mean(r1)); %Left edge
+    Ry = round(mean(r2)); %Right edge
+
+    %Uses the calibration coefficient to find distance of amp
+    c = cell2mat(calibrate);
+    LUamp = c*abs(Ly - Uy);
+    RUamp = c*abs(Ly - Dy);
+    LLamp = c*abs(Ry - Uy);
+    RLamp = c*abs(Ry - Dy);
+
+    imshow(fold, 'InitialMagnification', 300)
+    hold on
+    verts = [Lx Ly; Rx Ry; Ux Uy; Dx Dy];
+    plot(verts(:,1), verts(:,2), 'r+')
+    title(['Distance is measured in ' , char(units)])
+    %Display amplitudes in plot
+    legend(['RU Amp = ', num2str(RUamp), '  LU Amp = ',...
+        num2str(LUamp), ' RL Amp = ', num2str(RLamp), '  LL Amp = ', num2str(LLamp)], 'Location', 'best')
+    hold off
+catch
+    warndlg('One period of the wave has not been selected therefore no amplitudes can be found', 'No Amplitudes Found')
+    RUamp = 0; LUamp = 0; RLamp = 0; LLamp = 0;
+end

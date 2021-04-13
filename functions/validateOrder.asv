@@ -1,0 +1,13 @@
+function order = validateOrder(orderEditHandle, MAX_ORDER)
+
+order = floor(str2double(get(orderEditHandle, 'String')));
+
+if order > MAX_ORDER
+    order = MAX_ORDER;
+    set(orderEditHandle, 'String', MAX_ORDER);
+elseif order < 0
+    order = 0;
+    set(orderEditHandle, 'String', 0);
+elseif isNan( % 
+    
+end
