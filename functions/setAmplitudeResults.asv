@@ -1,9 +1,0 @@
-function setAmplitudeResults(tuneHandles)
-
-coeff = coeffvalues(tuneHandles.cfitResult);
-
-for k = 1:tuneHandles.cfitResult.order
-    [amp, phase] = convertSineFormat(coeff(2*k), coeff(2*k+1));
-    labelHandle = sprintf('a%dResult',k);
-    currRow{end+1} = amp;
-end
