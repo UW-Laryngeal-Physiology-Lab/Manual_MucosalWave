@@ -1,0 +1,34 @@
+% This function checks if 
+
+function exist = resultsExist(handles)
+    
+    RIGHT_UPPER_RESULT_FIELD = 'ruresult';
+    RIGHT_LOWER_RESULT_FIELD = 'rlresult';
+    LEFT_UPPER_RESULT_FIELD = 'luresult';
+    LEFT_LOWER_RESULT_FIELD = 'llresult';
+    
+    exist = false;
+
+    if ~isfield(handles, RIGHT_UPPER_RESULT_FIELD) ...
+            || ~isfield(handles, RIGHT_LOWER_RESULT_FIELD) ...
+            || ~isfield(handles, LEFT_UPPER_RESULT_FIELD) ...
+            || ~isfield(handles, LEFT_LOWER_RESULT_FIELD)
+        return
+    end
+
+    results = [handles.(RIGHT_UPPER_RESULT_FIELD), ...
+               handles.(RIGHT_LOWER_RESULT_FIELD), ...
+               handles.luresult,...
+        handles.llresult];
+
+    emptyCount = 0;
+    for i = 1:length(results)
+        if (isempty(results(i))), emptyCount = emptyCount + 1; end
+    end
+
+    if emptyCount == length(results)
+        return
+    end
+    
+    exist = true;
+end
