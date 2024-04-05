@@ -5,14 +5,14 @@
 %          kymogram from that video. The kymogram is then analyzed to
 %          determine the waveforms of the vocal folds.
 % Lastest edits done by: Austin Scholp
-% Last edited on: October 7th, 2023
+% Last edited on: April 5th, 2024
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function varargout = mucosal(varargin)
 % MUCOSAL M-file for mucosal.fig
 %      MUCOSAL, by itself, creates a new MUCOSAL or raises the existing
 %      singleton*.
-% 
+%
 %      H = MUCOSAL returns the handle to a new MUCOSAL or the handle to
 %      the existing singleton*.
 %
@@ -37,12 +37,12 @@ function varargout = mucosal(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @mucosal_OpeningFcn, ...
-                   'gui_OutputFcn',  @mucosal_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
-if nargin & isstr(varargin{1})
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @mucosal_OpeningFcn, ...
+    'gui_OutputFcn',  @mucosal_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
+if nargin && isstr(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
 
@@ -55,7 +55,7 @@ end
 
 
 % --- Executes just before mucosal is made visible.
-function mucosal_OpeningFcn(hObject, eventdata, handles, varargin)
+function mucosal_OpeningFcn(hObject, ~, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -72,7 +72,7 @@ guidata(hObject, handles); % Update handles structure
 
 
 % --- Outputs from this function are returned to the command pixelindex.
-function varargout = mucosal_OutputFcn(hObject, eventdata, handles)
+function varargout = mucosal_OutputFcn(~, ~, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -82,13 +82,13 @@ function varargout = mucosal_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 % --- Executes on button press in load.
-function file_Callback(hObject, eventdata, handles)
+function file_Callback(~, ~, ~)
 % hObject    handle to load (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 % --- Executes on button press in load.
-function load_Callback(hObject, eventdata, handles)
+function load_Callback(hObject, ~, handles)
 % hObject    handle to load (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -115,8 +115,8 @@ handles.units = {'pixels', 'radians', 1};
 guidata(hObject, handles);
 
 %  The calibration GUI can overwrite the initial calibration values
-fnamecell = {fname}; % to pass string arguments to a GUI they need to be 
-                     %  in a cell array
+fnamecell = {fname}; % to pass string arguments to a GUI they need to be
+%  in a cell array
 calibration(fnamecell);
 uiwait(calibration);
 pause(0.01); % Give time for the savedialog to close
@@ -132,7 +132,7 @@ end
 
 % Extract video information (# frames, frame rate, etc.) from .avi file
 info = VideoReader(fname);
-num = info.NumberOfFrames;
+num = info.NumFrames;
 
 % children = get(handles.preprocesspanel, 'Children');
 % set(children, 'Enable', 'off');
@@ -156,7 +156,7 @@ handles.endframe = handles.maxframes;
 handles.no = handles.maxframes;
 handles.currframeim = firstFrameIm;
 handles.num = num; % total # frames in video
-handles.name = name; 
+handles.name = name;
 handles.fname = fname;
 handles.initcropdim = [1 1 info.Width info.Height];
 handles.cropdim = [1 1 info.Width info.Height];
@@ -190,7 +190,7 @@ displayPreprImage(handles.currframeim, handles.mainaxis, handles.rotdeg,...
 
 
 % --- Executes on button press in cut.
-function cut_Callback(hObject, eventdata, handles)
+function cut_Callback(hObject, ~, handles)
 % hObject    handle to cut (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -221,7 +221,7 @@ if x <= 0
 end
 if y <= 0
     height = height + y;
-    y = 1; 
+    y = 1;
 end
 if x + width > imageSize(2)
     width = imageSize(2) - x;
@@ -294,7 +294,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on slider movement.
-function pixelindex_Callback(hObject, eventdata, handles)
+function pixelindex_Callback(hObject, ~, handles)
 % hObject    handle to pixelindex (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -312,7 +312,7 @@ displayPreprImage(handles.currframeim, handles.mainaxis, handles.rotdeg,...
 
 
 % --- Executes on button press in generate.
-function generate_Callback(hObject, eventdata, handles)
+function generate_Callback(hObject, ~, handles)
 % hObject    handle to generate (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -327,7 +327,7 @@ handles.luEdges = zeros(1,2);
 handles.llEdges = zeros(1,2);
 
 ind = handles.ind; % column from which the kymopgraphic image is created.
-if (ind == 0), 
+if (ind == 0),
     errordlg('Choose a column to analyze before pressing Generate.')
     return
 end
@@ -413,7 +413,7 @@ guidata(hObject, handles);
 % successmessage = [successmessage successmessage2]; % concatenate
 % msgbox(successmessage, 'Success', 'help');
 
-  
+
 % --- Executes during object creation, after setting all properties.
 function threshslider_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to threshslider (see GCBO)
@@ -443,7 +443,7 @@ function threshslider_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
 % This function allows the user to change the threshold for the upper vocal
-% fold (not the left vocal fold).  
+% fold (not the left vocal fold).
 
 m_wave = handles.m_wave;
 
@@ -894,7 +894,7 @@ else
     freqTerm = freqVariable;
 end
 
-% KSOCT - Modified Eqn for left crop issue 
+% KSOCT - Modified Eqn for left crop issue
 row0 = {sprintf(['Fit equation form: y = a0 + a1*sin(%s * (t-delay) + p1)'...
     '+ a2*sin(%s * (t-leftCrop) + p2) + ...'],freqTerm,freqTerm)};
 
@@ -943,7 +943,7 @@ for i = 1:length(conf_row1)
 end
 
 nonEmptyFound = 0; % the number of non-empty results found, used for
-                   % indexing in allRows arrays
+% indexing in allRows arrays
 % Create a row for each result
 for i = 1:length(results)
     if (~isempty(results(i)))
@@ -966,7 +966,7 @@ for i = 1:length(results)
         currRow{end+1} = floor(get(handles.cycle_right,'Value')); %r-crop
         currRow{end+1} = ...
             convertAmpToRealUnits(currResult.a0, handles.units);
-
+        
         % Sinusoid coefficients
         cfitObject = currResult.cfitObject;
         coeff = coeffvalues(cfitObject);
@@ -974,7 +974,7 @@ for i = 1:length(results)
         coeff(end) = convertFreqToRealUnits(coeff(end), handles.frameRate);
         
         currRow{end+1} = coeff(end); % fundamental frequency value
-
+        
         for k = 1:currResult.order
             [amp, phase] = convertSineFormat(coeff(2*k), coeff(2*k+1));
             currRow{end+1} = amp;
@@ -1067,7 +1067,7 @@ for k = 1:4
     end
 end
 xlswrite(newWorkbookName,ptSheet,'Points');
- 
+
 %writer=[];
 % disp(points_matrix_nik);
 % pause;
@@ -1075,8 +1075,8 @@ xlswrite(newWorkbookName,ptSheet,'Points');
 %writer={{points_matrix_nik(:,1)} {points_matrix_nik(:,2)} {points_matrix_nik_edge}};
 %disp(writer);
 
-%xlswrite(newWorkbookName,points_matrix_nik(:,1) , 'Points','A2');    
-%xlswrite(newWorkbookName,points_matrix_nik(:,2) , 'Points','B2');  
+%xlswrite(newWorkbookName,points_matrix_nik(:,1) , 'Points','A2');
+%xlswrite(newWorkbookName,points_matrix_nik(:,2) , 'Points','B2');
 %warning off
 %xlswrite(newWorkbookName,points_matrix_nik_edge, 'Points','C2');
 
@@ -1168,16 +1168,16 @@ if pathname == 0, return; end %if user pressed cancel, exit this callback
 % This puts all existing results and m_wave image into workspace variables
 load(fullfile(pathname,filename));
 
-if exist('ruresult','var') && exist('rlresult','var')... 
-    && exist('luresult','var') && exist('llresult','var')
-
+if exist('ruresult','var') && exist('rlresult','var')...
+        && exist('luresult','var') && exist('llresult','var')
+    
     % Put vocal fold results into array
     results = [ruresult rlresult luresult llresult];
-
+    
     % only display results if at least one result exists
     for i = 1:length(results)
         if (~isempty(results(i)))
-            displayFitResults(results, m_wave) 
+            displayFitResults(results, m_wave)
             break
         end
     end
@@ -1292,9 +1292,9 @@ function savesin_Callback(hObject, eventdata, handles)
 if getNumResults(handles) == 0, errordlg('No results to save.'); return; end
 
 sinData = [handles.ruresult.xdata' -handles.ruresult.ydata'...
-           handles.rlresult.xdata' -handles.rlresult.ydata'...
-           handles.luresult.xdata' -handles.luresult.ydata'...
-           handles.llresult.xdata' -handles.llresult.ydata'];
+    handles.rlresult.xdata' -handles.rlresult.ydata'...
+    handles.luresult.xdata' -handles.luresult.ydata'...
+    handles.llresult.xdata' -handles.llresult.ydata'];
 
 % indices of file types
 CSV = 1; XLS = 2; ASCII = 3;
@@ -1310,7 +1310,7 @@ elseif extension == XLS
 elseif extension == ASCII
     dlmwrite([saveFileName char(fileExtensions(extension))], sinData);
 end
-    
+
 
 
 % --- Executes on button press in showselections.
@@ -1850,7 +1850,7 @@ end
 % % hObject    handle to ruOrderEdit (see GCBO)
 % % eventdata  reserved - to be defined in a future version of MATLAB
 % % handles    structure with handles and user data (see GUIDATA)
-% 
+%
 % % Hints: contents = get(hObject,'String') returns ruOrderEdit contents as cell array
 % %        contents{get(hObject,'Value')} returns selected item from ruOrderEdit
 
@@ -1860,7 +1860,7 @@ end
 % % hObject    handle to ruOrderEdit (see GCBO)
 % % eventdata  reserved - to be defined in a future version of MATLAB
 % % handles    empty - handles not created until after all CreateFcns called
-% 
+%
 % % Hint: popupmenu controls usually have a white background on Windows.
 % %       See ISPC and COMPUTER.
 % if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -1893,7 +1893,7 @@ end
 
 
 % -----Executes on press of load image in file menu------------------
-function load_image_Callback(hObject, eventdata, handles)
+function load_image_Callback(hObject, ~, handles)
 % hObject    handle to load_image (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1974,9 +1974,9 @@ handles.ind = 0; % Kymograph Column Index
 
 % Used For Storing Kymograph and Parameters
 handles.thresh = 0;
-handles.m_wave = 0; 
-handles.m1_wave = 0; 
-    
+handles.m_wave = 0;
+handles.m1_wave = 0;
+
 % Edge points for each vocal fold
 handles.ruEdges = zeros(1,2);
 handles.rlEdges = zeros(1,2);
@@ -2034,12 +2034,12 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in amp.
-function amp_Callback(hObject, eventdata, handles)
+function amp_Callback(hObject, ~, handles)
 % hObject    handle to amp (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[RUamp RLamp LUamp LLamp] = ampFind(handles.bw, handles.units(3), handles.units(1));
+[RUamp, RLamp, LUamp, LLamp] = ampFind(handles.bw, handles.units(3), handles.units(1));
 handles.ruAmp = RUamp;
 handles.luAmp = LUamp;
 handles.rlAmp = RLamp;
@@ -2048,21 +2048,21 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in pushbutton55.
-function pushbutton55_Callback(hObject, eventdata, handles)
+function pushbutton55_Callback(~, ~, handles)
 % hObject    handle to pushbutton55 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 %Saves the current kymographic image into the user specified file
-try        
+try
     %The kymogram image is being rotated -90 degrees and saved in an array
     %to avoid errors if it is reloaded in to the mucosal program.
     im(:,:,1) = imrotate(handles.m1_wave, -90);
     im(:,:,2) = imrotate(handles.m1_wave, -90);
     im(:,:,3) = imrotate(handles.m1_wave, -90);
-    [fName pathName] = uiputfile('*.jpg','Save Kymograph Image');
+    [fName, pathName] = uiputfile('*.jpg','Save Kymograph Image');
     
-    if isempty(fName), return; end;
+    if isempty(fName), return; end
     imfile = fullfile(pathName,fName);
     imwrite(im, char(imfile), 'jpg','Quality',100)
 catch
@@ -2072,7 +2072,7 @@ end
 
 
 % --- Executes on button press in drawMidlineButton.
-function drawMidlineButton_Callback(hObject, eventdata, handles)
+function drawMidlineButton_Callback(hObject, ~, handles)
 % hObject    handle to drawMidlineButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2101,17 +2101,17 @@ if y1>y2
     rotationAngle = -1 * rotationAngle;
 end
 % update the degree of rotation of the picture
-   handles.rotdeg = rotationAngle + handles.rotdeg;   
-    
+handles.rotdeg = rotationAngle + handles.rotdeg;
+
 %Set Rotate slider all the way to the right
-    newRotatePosition = 120 - handles.rotdeg;
-    if newRotatePosition > 240
-        newRotatePosition = newRotatePosition - 360;
-    elseif newRotatePosition < 0
-            newRotatePosition = (newRotatePosition + 360);
-    end
-    set(handles.rotate, 'Value',newRotatePosition);
-    
+newRotatePosition = 120 - handles.rotdeg;
+if newRotatePosition > 240
+    newRotatePosition = newRotatePosition - 360;
+elseif newRotatePosition < 0
+    newRotatePosition = (newRotatePosition + 360);
+end
+set(handles.rotate, 'Value',newRotatePosition);
+
 % update crop rectangle
 tempImage = imrotate(handles.currframeim, handles.rotdeg, 'bilinear', 'loose');
 handles.cropdim = [0 0 size(tempImage, 2) size(tempImage, 1)];
@@ -2161,7 +2161,7 @@ line([x1 x2],[y1 y2]);
 
 
 % --- Executes on button press in setPercentageButton.
-function setPercentageButton_Callback(hObject, eventdata, handles)
+function setPercentageButton_Callback(~, eventdata, handles)
 % hObject    handle to setPercentageButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2202,17 +2202,17 @@ if ~isempty(perct)
     pixelindex_Callback(handles.pixelindex,eventdata,handles);
 end
 
-function help_Callback(hObject, eventdata, handles)
+function help_Callback(~, ~, ~)
 % hObject    handle to setPercentageButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-function tools_Callback(hObject, eventdata, handles)
+function tools_Callback(~, ~, ~)
 % hObject    handle to setPercentageButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-function useselection_Callback(hObject, eventdata, handles)
+function useselection_Callback(~, ~, ~)
 % hObject    handle to setPercentageButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

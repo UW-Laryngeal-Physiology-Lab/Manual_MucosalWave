@@ -11,13 +11,10 @@ function [ thisFrame ] = getFrame( fname, currframe )
 myMat(:, :) = read(VideoReader(fname), currframe(1));
 
 % create grayscale colormap
-cmap(:,:) = (0:(1/(size(myMat, 1)-1)):1)';
-cmap(:,2) = cmap(:,1);
-cmap(:,3) = cmap(:,1);
+cmap = gray(255);
 
 %get first frame
-thisFrame = struct('cdata', myMat(:, :), ...
-'colormap', cmap(:, :));
+thisFrame = struct('cdata', myMat(:, :),'colormap', cmap(:, :));
 
 % if more than one, build structure of all frames
 if length(currframe) ~= 1
